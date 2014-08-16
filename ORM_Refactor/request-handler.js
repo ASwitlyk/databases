@@ -1,4 +1,5 @@
-var db = require('./db');
+// var db = require('./db');
+var db = require('./db.js');
 var serverHelpers = require('./server-helpers');
 // wham! magic.
 var parseData = serverHelpers.collectData;
@@ -30,7 +31,7 @@ exports.postMessage = function(req, res) {
       message = msg;
       console.log('message is: ', message);
       findUser(msg.username, function (err, results) {
-        console.log('results is: ',results);
+        console.log('results is from resultsCallback are: ',results);
         // no results/0 results
         if (!results || !results.length) {
           // create the user, then post the message
@@ -44,7 +45,7 @@ exports.postMessage = function(req, res) {
 };
 
 exports.getMessages = function(req, res) {
-  findMessages(function(err, messages) {
+  findMessages(function(messages) {
       serverHelpers.sendResponse(res, messages);
   });
 };

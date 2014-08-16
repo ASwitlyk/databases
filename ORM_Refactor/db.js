@@ -1,5 +1,7 @@
 var mysql = require('mysql');
 var mysql = require('mysql');
+
+var orm = require('./orm-example.js');
 /* If the node mysql module is not found on your system, you may
  * need to do an "sudo npm install -g mysql". */
 
@@ -24,26 +26,30 @@ dbConnection.connect();
 
 
 exports.findAllMessages = function(cb){
-	var sql = "SELECT * FROM messages";
-	dbConnection.query(sql, cb);
+	orm.Message.findAll().success(cb);
+	// var sql = "SELECT * FROM messages";
+	// dbConnection.query(sql, cb);
 };
 
 exports.findUser = function(username, cb){
 	//make sql query
-	var sql = 'SELECT * FROM users WHERE user_name = "'+username+'";';
-	// var sql = 'SELECT user_name FROM users WHERE user_name = "andrew";';
-	dbConnection.query(sql, cb);
+	orm.Users.find({where: {username: username}}).success(cb);
+	// var sql = 'SELECT * FROM users WHERE user_name = "'+username+'";';
+	// // var sql = 'SELECT user_name FROM users WHERE user_name = "andrew";';
+	// dbConnection.query(sql, cb);
 };
 
 exports.saveUser = function(username, cb){
-	var sql = 'INSERT INTO users (user_name) VALUES ("'+username+'");';
-	dbConnection.query(sql, cb);
+	var newUser = orm.Users.create({username: username}).complete(cb);
+	// var sql = 'INSERT INTO users (user_name) VALUES ("'+username+'");';
+	// dbConnection.query(sql, cb);
 };
 
 exports.saveMessage = function(message, userid, roomname, cb){
 	// add message to sql database
-	var sql = 'INSERT INTO messages (message, roomname, id_users) VALUES ("'+message+'", "'+roomname+'","'+userid+'");';
-	dbConnection.query(sql, cb);
+	var newMessage = orm.Message.create({text: message, UserId: userid, roomname: roomname}).complete(cb);
+	// var sql = 'INSERT INTO messages (message, roomname, id_users) VALUES ("'+message+'", "'+roomname+'","'+userid+'");';
+	// dbConnection.query(sql, cb);
 };
 
 // exports.findUser('luby', function(err, results) {
